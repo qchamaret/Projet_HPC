@@ -4,17 +4,17 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=12G
 #SBATCH --cpus-per-task=6   # Nb of threads we want to run on
-#SBATCH -o atacseq/log/slurmjob-%A-%a
+#SBATCH -o Projet_HPC/log/slurmjob-%A-%a
 #SBATCH --job-name=trim_atac
 #SBATCH --partition=short
 #SBATCH --array=0-5
 
 # Program configuration
-__author__='Nadia Goué'
-__email__='nadia.goue@uca.fr'
-__credits__=["Nadia Goué"]
+__author__='Quentin Chamaret'
+__email__='quentin.chamaret@etu.uca.fr'
+__credits__=["Quentin Chamaret"]
 __license__='GPL3'
-__maintainer__='Nadia Goué'
+__maintainer__='Quentin Chamaret'
 __status__='Development'
 __version__='0.0.1'
 
@@ -38,13 +38,13 @@ echo "Set up directories ..." >&2
 #Set up the temporary directory
 SCRATCHDIR=/storage/scratch/"$USER"/"$SLURM_JOB_ID"
 
-OUTPUT="$HOME"/atacseq/results/trim
+OUTPUT="$HOME"/Projet_HPC/results/trim
 mkdir -p "$OUTPUT"
 mkdir -p -m 700 "$SCRATCHDIR"
 cd "$SCRATCHDIR"
 
 #Set up data directory
-DATA_DIR="$HOME"/atacseq/data/raw
+DATA_DIR="$HOME"/Projet_HPC/data
 
 #Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
