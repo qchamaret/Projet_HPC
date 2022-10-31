@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --mem-per-cpu=2G
 #SBATCH --cpus-per-task=1   # Nb of threads we want to run on
-#SBATCH -o atacseq/log/slurmjob-%A-%a
+#SBATCH -o Projet_HPC/log/slurmjob-%A-%a
 #SBATCH --job-name=qc_atac
 #SBATCH --partition=short
 #SBATCH --array=0-23
@@ -17,6 +17,8 @@ __license__='GPL3'
 __maintainer__='Nadia Goué'
 __status__='Development'
 __version__='0.0.1'
+__developer__='Quentin Chamaret'
+__email__='quentin.chamaret@etu.uca.fr'
 
 echo 'Quality control'
 
@@ -35,7 +37,7 @@ module load java/oracle-1.7.0_79 fastqc/0.11.7
 echo "Set up directories ..." >&2
 # Set up data and result directories
 # Run QC on trimmed data
-DATA_DIR="$HOME"/atacseq/results/trim
+DATA_DIR="$HOME"/Projet_HPC/results/trim
 
 echo "Set up an array with all fastq.gz sequence files..." >&2
 tab=($(ls "$DATA_DIR"/*/*trim*.fastq.gz))
@@ -57,7 +59,7 @@ fi
 
 SCRATCHDIR=/storage/scratch/"$USER"/"$shortname/fastqc-post"
 
-OUTPUT="$HOME"/atacseq/results/qc/"$shortname"
+OUTPUT="$HOME"/Projet_HPC/results/qc/"$shortname"
 mkdir -p "$OUTPUT"
 mkdir -p -m 700 "$SCRATCHDIR"
 
