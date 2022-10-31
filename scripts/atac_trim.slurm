@@ -46,7 +46,8 @@ mkdir -p -m 700 "$SCRATCHDIR"
 cd "$SCRATCHDIR"
 
 #Set up data directory
-DATA_DIR="$HOME"/Projet_HPC/data
+DATA_DIR=/home/users/shared/data/atacseq/data/subset
+CLIPS_DIR=/home/users/shared/data/atacseq/data/
 
 #Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
@@ -68,7 +69,7 @@ java -jar /opt/apps/trimmomatic-0.38/trimmomatic-0.38.jar PE -threads ${SLURM_CP
     $(basename "${tab_fwd[$SLURM_ARRAY_TASK_ID]}" .fastq.gz)_trim_unpaired.fastq.gz \
     $(basename "${tab_rev[$SLURM_ARRAY_TASK_ID]}" .fastq.gz)_trim_paired.fastq.gz \
     $(basename "${tab_rev[$SLURM_ARRAY_TASK_ID]}" .fastq.gz)_trim_unpaired.fastq.gz \
-    ILLUMINACLIP:"$DATA_DIR"/NexteraPE-PE.fa:2:30:10:2:keepBothReads \
+    ILLUMINACLIP:"$CLIPS_DIR"/NexteraPE-PE.fa:2:30:10:2:keepBothReads \
     LEADING:3 \
     TRAILING:3 \
     SLIDINGWINDOW:4:15 \

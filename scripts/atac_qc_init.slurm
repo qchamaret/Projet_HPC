@@ -38,7 +38,7 @@ echo "Set up directories ..." >&2
 # Set up data and result directories
 # Run QC on raw data and an trimmed data
 
-DATA_DIR="$HOME"/Projet_HPC/data
+DATA_DIR=/home/users/shared/data/atacseq/data/subset
 
 echo "Set up an array with all fastq.gz sequence files..." >&2
 tab=($(ls "$DATA_DIR"/*.fastq.gz))
