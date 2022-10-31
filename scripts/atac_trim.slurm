@@ -10,13 +10,15 @@
 #SBATCH --array=0-5
 
 # Program configuration
-__author__='Quentin Chamaret'
-__email__='quentin.chamaret@etu.uca.fr'
-__credits__=["Quentin Chamaret"]
+__author__='Nadia Goué'
+__email__='nadia.goue@uca.fr'
+__credits__=["Nadia Goué"]
 __license__='GPL3'
-__maintainer__='Quentin Chamaret'
+__maintainer__='Nadia Goué'
 __status__='Development'
 __version__='0.0.1'
+__developer__='Quentin Chamaret'
+__email__='quentin.chamaret@etu.uca.fr'
 
 echo 'Quality control and trimming'
 
