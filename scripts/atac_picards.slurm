@@ -1,9 +1,9 @@
 #!/bin/bash
-##SBATCH --time=5:00:00
+#SBATCH --time=0:30:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=30G
-#SBATCH --cpus-per-task=8   # Nb of threads we want to run on
+#SBATCH --cpus-per-task=6   # Nb of threads we want to run on
 #SBATCH -o Projet_HPC/log/slurmjob-%A-%a
 #SBATCH --job-name=picards_atac
 #SBATCH --partition=short
@@ -33,7 +33,7 @@ IFS=$'\n\t'
 
 #Set up whatever package we need to run with
 module purge
-module load gcc/8.1.0 java/oracle-1.11.0_11 picard/2.18.25
+module load gcc/8.1.0 java/oracle-1.11.0_11 picard/2.18.25 samtools/1.9
 
 echo "Set up directories ..." >&2
 #Set up the temporary directory
@@ -51,20 +51,29 @@ echo "tab = " >&2
 printf '%s\n' "${tab[@]}" >&2
 
 # Current filename
-SHORTNAME=$(basename "${tab[$SLURM_ARRAY_TASK_ID]}" _trim_mapped_sorted_q2.bam )
+SHORTNAME=$(basename "${tab[$SLURM_ARRAY_TASK_ID]}" .bam )
 echo "shortname = $SHORTNAME" >&2
 
 # Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
 
 echo "MarkDuplicates' elimination of duplicates ..." >&2
-# Args -I <file> : Path to the input BAM files to analyze
-# Args -O <file> : Path to where the output files should be writen
-# Args -M <file> : Path to where the duplication metrics should be writen
+# Args I <file> : Path to the input BAM files to analyze
+# Args O <file> : Path to where the output files should be writen
+# Args M <file> : Path to where the duplication metrics should be writen
 
 java -jar /opt/apps/picard-2.18.25/picard.jar MarkDuplicates I="${tab[$SLURM_ARRAY_TASK_ID]}"  \
- O="$SCRATCHDIR"/"$SHORTNAME"_trim_mapped_marked_sorted.bam M="$SCRATCHDIR"/"$SHORTNAME"_metrics.txt
+ O="$SHORTNAME"_nodup.bam M="$SHORTNAME"_dups.txt REMOVE_DUPLICATES=true
 
+echo "Indexing mapped sorted bam file ..." >&2
+
+samtools index -b "$SHORTNAME"_nodup.bam
+
+echo "List SCRATCHDIR: "
+ls "$SCRATCHDIR" >&2
+
+echo "Statistics on mapping ..." >&2
+samtools idxstats "$SHORTNAME"_nodup.bam > $OUTPUT/"$SHORTNAME".log
 
 #Move results from scratch to user one's directory
 mv  "$SCRATCHDIR" "$OUTPUT"
