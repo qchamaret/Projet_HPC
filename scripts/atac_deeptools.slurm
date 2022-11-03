@@ -73,7 +73,7 @@ echo "plotCorrelation in order to see the correlation between samples" >&2
 # Args -c <character> : Choose whether to use the pearson or the spearman coefficient
 # Args --removeOutliers : Will remove outliers from the samples
 
-plotCorrelation -in "$NPZ_FILE" -p heatmap -c pearson -o "$OUTPUT"/heatmap.png --removeOutliers -T "Pearson correlation between the samples"
+plotCorrelation -in "$NPZ_FILE" -p heatmap -c pearson -o "$OUTPUT"/heatmap.png --removeOutliers
 
 echo "bamCoverage in order to see the coverage on the genome from each sample"
 # Args -b <file> : Path to the input BAM file
@@ -85,8 +85,10 @@ bamCoverage -b "${tab[$SLURM_ARRAY_TASK_ID]}" -o "$SHORTNAME".bedgraph -of bedgr
 echo "bamPEFragmentSize to compare the reads length according to the samples"
 # Args -b <file> : Path to the input BAM files
 # Args -o <file> : Path to where the output should be writen
+# Args --samplesLabels <character> : Rename the samples by these labels
 
-bamPEFragmentSize -b "${tab[@]}" -o "$OUTPUT"/hist.png
+bamPEFragmentSize -b "${tab[@]}" --samplesLabel 0h_R1 0h_R2 0h_R3 24h_R1 24h_R2 24h_R3 --table "$OUTPUT"/table.tsv \
+ -o "$OUTPUT"/hist.png
 
 #Move results from scratch to user one's directory
 mv  "$SCRATCHDIR" "$OUTPUT"
