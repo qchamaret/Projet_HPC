@@ -68,6 +68,7 @@ echo "bamPEFragmentSize to compare the reads length according to the samples"
 # Args -b <file> : Path to the input BAM files
 # Args -o <file> : Path to where the output should be writen
 # Args --samplesLabels <character> : Rename the samples by these labels
+# Args --table <file> : Give the metrics in a tabular format
 
 bamPEFragmentSize -b "${tab[@]}" --samplesLabel 0h_R1 0h_R2 0h_R3 24h_R1 24h_R2 24h_R3 --table "$OUTPUT"/table.tsv \
  -o "$OUTPUT"/hist.png
