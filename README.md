@@ -153,28 +153,43 @@ multiBamSummary bins --bamfiles "input_files" -o "path"
 
 plotCorrelation -in "input_file" -p "character" --plotNumbers -c "character -o "path" --removeOutliers
 
-  -o : Path to where the output files should be writen
-  -p : Choose whether you want to plot a heatmap or a scatterplot
-  -c : Choose whether to use the pearson or the spearman coefficient
-  --removeOutliers : Will remove outliers from the samples
+  -o : Path to where the output files should be writen<br>
+  -p : Choose whether you want to plot a heatmap or a scatterplot<br>
+  -c : Choose whether to use the pearson or the spearman coefficient<br>
+  --removeOutliers : Will remove outliers from the samples<br>
 
 <h3>bamCoverage</h3>
 
 bamCoverage -b "input_file" -o "path" -of "character"
 
-  -o : Path to where the output files should be writen
-  -of : Choose whether the output will be in Bigwig or in bedgraph format
+  -o : Path to where the output files should be writen<br>
+  -of : Choose whether the output will be in Bigwig or in bedgraph format<br>
 
 <h3>bamPEFragmentSize</h3>
   
 bamPEFragmentSize -b "input_files" --samplesLabel "character" --table "path"  -o "path"
 
-  -o : Path to where the output files should be writen
-  --samplesLabels : Rename the samples by these labels
-  --table : Give the metrics in a tabular format
+  -o : Path to where the output files should be writen<br>
+  --samplesLabels : Rename the samples by these labels<br>
+  --table : Give the metrics in a tabular format<br>
 
 "deepTools: a flexible platform for exploring deep-sequencing data" Ramírez F, Dündar F, Diehl S, Grüning BA, Manke T. 2014 https://doi.org/10.1093%2Fnar%2Fgku365
 
 <h2>MACS2 - CallPeaks</h2>
 
+macs2 callpeak -t "input_files" -f "character  -n "character" --outdir "path"
+
+  -f : Format of the input files<br>
+  -n : Name of the output files<br>
+  --outdir : Path to where the output files shoul be writen<br>
+
+https://github.com/macs3-project/MACS
+
 <h2>Bedtoools - Intersect</h2>
+
+bedtools intersect -wa (-v) -a "input_file" -b "input_file" > "output_path
+
+  -wa : For each overlap, write the original entry of -a<br>
+  -v : Returns entries in -a that have no overlap in -b<br>
+  
+"BEDTools: a flexible suite of utilities for comparing genomic features" Quinlan AR, Hall IM. 2010 https://doi.org/10.1093/bioinformatics/btq033
