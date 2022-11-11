@@ -7,7 +7,7 @@
 #SBATCH -o Projet_HPC/log/slurmjob-%A-%a
 #SBATCH --job-name=bedtools_atac
 #SBATCH --partition=short
-#SBATCH --array=0-5
+#SBATCH --array=0-2
 
 # Program configuration
 __author__='Nadia Goué'
@@ -44,28 +44,33 @@ mkdir -p "$OUTPUT"
 mkdir -p -m 700 "$SCRATCHDIR"
 cd "$SCRATCHDIR"
 
-echo "Set up an array with all results from MACS2" >&2
+echo "Set up two arrays with results of 0h for one and 24h for the other from MACS2" >&2
 
-tab=($(find "$HOME"/Projet_HPC/results/macs2 -type f -name "*_trim_mapped_sorted_q2_nodup_summits.bed" -printf "%f %p \n" | sort -k1 | cut -d " " -f 2))
-echo "tab = " >&2
-printf '%s\n' "${tab[@]}" >&2
+tab_0h=($(find "$HOME"/Projet_HPC/results/macs2 -type f -name "ss_50k_0h_*.bed" -printf "%f %p \n" | sort -k1 | cut -d " " -f 2))
+echo "tab_0h = " >&2
+printf '%s\n' "${tab_0h[@]}" >&2
+
+tab_24h=($(find "$HOME"/Projet_HPC/results/macs2 -type f -name "ss_50k_24h_*.bed" -printf "%f %p \n" | sort -k1 | cut -d " " -f 2))
+echo "tab_24h = " >&2
+printf '%s\n' "${tab_24h[@]}" >&2
 
 # Current filename
-SHORTNAME=$(basename "${tab[$SLURM_ARRAY_TASK_ID]}" .bed )
+SHORTNAME=$(basename "${tab_0h[$SLURM_ARRAY_TASK_ID]}" .bed )
 echo "shortname = $SHORTNAME" >&2
 
 # Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
 
-echo "${tab[@]}" != "${tab[$SLURM_ARRAY_TASK_ID]}" >&2
-
 echo "Identification of common DNA access sites with intersect from bedtools" >&2
-# Args -t <file> : Path to the input BAM files to analyze
-# Args --outdir <file> : Path to where the output files should be writen
-# Args -f <character> : Format of the input files
-# Args -n <character> : Name of the output files
+# Args -a and -b : Path to the input BAM files to analyze
+# Args -wa : For each overlap, write the original entry of -a
+# Args -v : Returns entries in -a that have no overlap in -b
 
-bedtools intersect -a "${tab[SLURM_ARRAY_TASK_ID]}" -b "${tab[SLURM_ARRAY_TASK_ID]}"> "$SHORTNAME"_common.bed
+bedtools intersect -wa -a "${tab_0h[$SLURM_ARRAY_TASK_ID]}" -b "${tab_24h[$SLURM_ARRAY_TASK_ID]}" > "$SHORTNAME"_common.bed
+
+echo "Identification of unique DNA access sites with intersect from bedtools" >&2
+
+bedtools intersect -wa -v -a "${tab_0h[$SLURM_ARRAY_TASK_ID]}" -b "${tab_24h[$SLURM_ARRAY_TASK_ID]}" > "$SHORTNAME"_unique.bed
 
 #Move results from scratch to user one's directory
 mv  "$SCRATCHDIR" "$OUTPUT"
