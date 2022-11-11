@@ -78,3 +78,103 @@ However, in order to see correlation between the sample, we must combine all the
 
 The remaining analyses can be done with the 'atac_deeptools.slurm" script.
 
+<h2>Identification of DNA access sites</h2>
+
+Thanks to the results from the 'atac_picards.slurm' script we are now able to identify the DNA access sites with the callPeaks function from the MACS2 module. This tool will give results as peaks which will represent the accessible regions.
+
+This step can be performed by executing the 'atac_macs2.slurm' script.
+
+<h2>Identification of common and unique DNA access sites</h2>
+
+Now that we have the positions of the access regions for the t=0h and the t=24h results, we are now able to see which regions are common and unique between these two stages. This analyze will be performed by the intersect function from the bedtools module. This function will take two files as input and see if there is overlaps between them. 
+In order to see the common and unique sites between the two conditions, we need to create two différent arrays which contains three elements. One of them will contains all the t=0h files and the other, all the t=24h files.
+
+If an access site is open at t=0h but closed at t=24h, it means that the Tamoxifen drug had an effect on these sites and closed them.
+However, if an access site is open at t=0h and is still open at t=24h, it means thant the Tamoxifen drug hadn't an effect on these sites.
+
+This step can be done by the 'atac_bedtools.slurm' script.
+
+<h2>Visualisation with IGV tool</h2>
+
+Now that we know which sites are impacted by the Tamoxifen drug, we can visualize better with the IGV tool.
+
+<h1>Used tools</h1>
+
+<h2>Fastqc</h2>
+
+fastqc "input_file" -dir "path" -o "path"
+  
+  -dir : Path to where the temporary files should be writen<br>
+  -o : Path to where the ouput files should be writen<br>
+
+"FastQ Screen: A tool for multi-genome mapping and quality control" Wingett SW, Andrews S. 2018 https://doi.org/10.12688/f1000research.15931.2
+  
+<h2>Trimmomatic</h2>
+
+java -jar /opt/apps/trimmomatic-0.38/trimmomatic-0.38.jar PE "input_files" "output_files_names" ILLUMINACLIP: "path" LEADING:"int" TRAILING:"int" SLIDINGWINDOW:"int" MINLEN:"int"
+  
+  ILLUMINACLIP : Path to where are the Illumina adaptaters sequence<br>
+  LEADING : Cut bases off the start of a read<br>
+  TRAILING : Cut bases off the end of a read<br>
+  SLIDINGWINDOW : Perform a sliding window trimming<br>
+  MINLEN : Specify the minimum length of a read to be kept<br>
+
+"Trimmomatic: a flexible trimmer for Illumina sequence data" Bolger AM et al. 2014 https://doi.org/10.1093%2Fbioinformatics%2Fbtu170
+  
+<h2>Bowtie2</h2>
+
+bowtie2  --very-sensitive -p "int" -k "int"  -x "int"  -1 "input_file"  -2 "input_file"
+  
+  --very-sensitive : Permits to give better alignment results<br>
+  -p : Number of cores to use<br>
+  -k : Maximum number of alignment to report per read<br>
+  -x : Maximum length of DNA fragment<br>
+  
+"Fast gapped-read alignment with Bowtie 2" Langmead, B., Salzberg, S. 2012 https://doi.org/10.1038/nmeth.1923
+  
+<h2>Picard - MarkDuplicates</h2>
+
+java -jar /opt/apps/picard-2.18.25/picard.jar MarkDuplicates I= "input_file" O= "path" M= "path" REMOVE_DUPLICATES= "boolean"
+  
+  O : Path to where the output files should be writen<br>
+  M : Path to where the duplication metrics should be writen<br>
+  REMOVE_DUPLICATES : Choose to write the duplicates in the output file with flags or not<br>
+
+“Picard Toolkit.” 2019. Broad Institute, GitHub Repository. https://broadinstitute.github.io/picard/; Broad Institute
+  
+<h2>Deeptools</h2>
+<h3>MultiBamSummary</h3>
+
+multiBamSummary bins --bamfiles "input_files" -o "path"
+
+  -o : Path to where the output files should be writen
+
+<h3>plotCorrelation</h3>
+
+plotCorrelation -in "input_file" -p "character" --plotNumbers -c "character -o "path" --removeOutliers
+
+  -o : Path to where the output files should be writen
+  -p : Choose whether you want to plot a heatmap or a scatterplot
+  -c : Choose whether to use the pearson or the spearman coefficient
+  --removeOutliers : Will remove outliers from the samples
+
+<h3>bamCoverage</h3>
+
+bamCoverage -b "input_file" -o "path" -of "character"
+
+  -o : Path to where the output files should be writen
+  -of : Choose whether the output will be in Bigwig or in bedgraph format
+
+<h3>bamPEFragmentSize</h3>
+  
+bamPEFragmentSize -b "input_files" --samplesLabel "character" --table "path"  -o "path"
+
+  -o : Path to where the output files should be writen
+  --samplesLabels : Rename the samples by these labels
+  --table : Give the metrics in a tabular format
+
+"deepTools: a flexible platform for exploring deep-sequencing data" Ramírez F, Dündar F, Diehl S, Grüning BA, Manke T. 2014 https://doi.org/10.1093%2Fnar%2Fgku365
+
+<h2>MACS2 - CallPeaks</h2>
+
+<h2>Bedtoools - Intersect</h2>
