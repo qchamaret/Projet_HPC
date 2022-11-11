@@ -5,7 +5,7 @@
 #SBATCH --mem=30G
 #SBATCH --cpus-per-task=6   # Nb of threads we want to run on
 #SBATCH -o Projet_HPC/log/slurmjob-%A-%a
-#SBATCH --job-name=macs2_atac
+#SBATCH --job-name=deeptools_atac
 #SBATCH --partition=short
 #SBATCH --array=0-5
 
@@ -20,7 +20,7 @@ __version__='0.0.1'
 __developer__='Quentin Chamaret'
 __email__='quentin.chamaret@etu.uca.fr'
 
-echo 'Identification of DNA access sites with MACS2'
+echo 'Use of the deepTools to analyze data'
 
 # Handling errors
 #set -x # debug mode on
@@ -33,18 +33,18 @@ IFS=$'\n\t'
 
 #Set up whatever package we need to run with
 module purge
-module load gcc/4.8.4 python/2.7.9 numpy/1.9.2 cython/0.25.2 MACS2/2.1.2
+module load gcc/4.8.4 python/2.7.9 numpy/1.9.2 samtools/1.3 deepTools/3.1.2
 
 echo "Set up directories ..." >&2
 #Set up the temporary directory
 SCRATCHDIR=/storage/scratch/"$USER"/"$SLURM_JOB_ID"
 
-OUTPUT="$HOME"/Projet_HPC/results/macs2
+OUTPUT="$HOME"/Projet_HPC/results/deeptools
 mkdir -p "$OUTPUT"
 mkdir -p -m 700 "$SCRATCHDIR"
 cd "$SCRATCHDIR"
 
-echo "Set up an array with all BAM alignment files" >&2
+echo "Set up an array with all BAM alignment files with no duplicates" >&2
 
 tab=($(find "$HOME"/Projet_HPC/results/picards -type f -name "*_trim_mapped_sorted_q2_nodup.bam" -printf "%f %p \n" | sort -k1 | cut -d " " -f 2))
 echo "tab = " >&2
@@ -57,16 +57,27 @@ echo "shortname = $SHORTNAME" >&2
 # Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
 
-echo "Identification of DNA access sites with MACS2" >&2
-# Args -t <file> : Path to the input BAM files to analyze
-# Args --outdir <file> : Path to where the output files should be writen
-# Args -f <character> : Format of the input files
-# Args -n <character> : Name of the output files
+echo "multiBamSummary to combine the BAM files into one" >&2
+# Args --bamfiles <file> : Path to the input BAM files to analyze
+# Args -o <file> : Path to where the output files should be writen
 
-macs2 callpeak -t "${tab[SLURM_ARRAY_TASK_ID]}" -f BAM  -n "$SHORTNAME" --outdir "$SCRATCHDIR"
+multiBamSummary bins --bamfiles "${tab[@]}" -o "$OUTPUT"/array.npz
+
+#Set up the path to the aggregate file
+NPZ_FILE="$OUTPUT"/array.npz
+
+echo "plotCorrelation in order to see the correlation between samples" >&2
+# Args -in <file> : Path to the aggregated BAM file
+# Args -o <file> : Path to where the output files should be writen
+# Args -p <character> : Choose whether you want to plot a heatmap or a scatterplot
+# Args -c <character> : Choose whether to use the pearson or the spearman coefficient
+# Args --removeOutliers : Will remove outliers from the samples
+
+plotCorrelation -in "$NPZ_FILE" -p heatmap --plotNumbers -c pearson -o "$OUTPUT"/heatmap.png --removeOutliers
 
 #Move results from scratch to user one's directory
 mv  "$SCRATCHDIR" "$OUTPUT"
 
 echo "Stop job : "`date` >&2
+
 

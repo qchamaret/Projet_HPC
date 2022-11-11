@@ -57,24 +57,6 @@ echo "shortname = $SHORTNAME" >&2
 # Run the program
 echo "Start on $SLURMD_NODENAME: "`date` >&2
 
-echo "multiBamSummary to combine the BAM files into one" >&2
-# Args --bamfiles <file> : Path to the input BAM files to analyze
-# Args -o <file> : Path to where the output files should be writen
-
-multiBamSummary bins --bamfiles "${tab[@]}" -o "$OUTPUT"/array.npz
-
-#Set up the path to the aggregate file
-NPZ_FILE="$OUTPUT"/array.npz
-
-echo "plotCorrelation in order to see the correlation between samples" >&2
-# Args -in <file> : Path to the aggregated BAM file
-# Args -o <file> : Path to where the output files should be writen
-# Args -p <character> : Choose whether you want to plot a heatmap or a scatterplot
-# Args -c <character> : Choose whether to use the pearson or the spearman coefficient
-# Args --removeOutliers : Will remove outliers from the samples
-
-plotCorrelation -in "$NPZ_FILE" -p heatmap -c pearson -o "$OUTPUT"/heatmap.png --removeOutliers
-
 echo "bamCoverage in order to see the coverage on the genome from each sample"
 # Args -b <file> : Path to the input BAM file
 # Args -o <file> : Path to where the output files should be writen
