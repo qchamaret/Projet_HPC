@@ -63,7 +63,7 @@ echo "Identification of DNA access sites with MACS2" >&2
 # Args -f <character> : Format of the input files
 # Args -n <character> : Name of the output files
 
-macs2 callpeak -t "${tab[SLURM_ARRAY_TASK_ID]}" -f BAM  -n "$SHORTNAME" --outdir "$SCRATCHDIR"
+macs2 callpeak -t "${tab[SLURM_ARRAY_TASK_ID]}" -f BAM -g mm -n "$SHORTNAME" --outdir "$SCRATCHDIR"
 
 #Move results from scratch to user one's directory
 mv  "$SCRATCHDIR" "$OUTPUT"
