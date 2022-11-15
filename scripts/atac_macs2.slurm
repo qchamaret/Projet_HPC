@@ -62,6 +62,7 @@ echo "Identification of DNA access sites with MACS2" >&2
 # Args --outdir <file> : Path to where the output files should be writen
 # Args -f <character> : Format of the input files
 # Args -n <character> : Name of the output files
+# Args -g <character> : Specify the length of the genome
 
 macs2 callpeak -t "${tab[SLURM_ARRAY_TASK_ID]}" -f BAM -g mm -n "$SHORTNAME" --outdir "$SCRATCHDIR"
 
