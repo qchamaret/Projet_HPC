@@ -87,7 +87,7 @@ This step can be performed by executing the 'atac_macs2.slurm' script.
 <h2>Identification of common and unique DNA access sites</h2>
 
 Now that we have the positions of the access regions for the t=0h and the t=24h results, we are now able to see which regions are common and unique between these two stages. This analyze will be performed by the intersect function from the bedtools module. This function will take two files as input and see if there is overlaps between them. 
-In order to see the common and unique sites between the two conditions, we need to create two différent arrays which contains three elements. One of them will contains all the t=0h files and the other, all the t=24h files.
+In order to see the common and unique sites between the two conditions, we need to create two different arrays which contains three elements. One of them will contains all the t=0h files and the other, all the t=24h files. Then, the files in a same array will be merged in order to see the differences between all the samples.
 
 If an access site is open at t=0h but closed at t=24h, it means that the Tamoxifen drug had an effect on these sites and closed them.
 However, if an access site is open at t=0h and is still open at t=24h, it means thant the Tamoxifen drug hadn't an effect on these sites.
@@ -177,10 +177,11 @@ bamPEFragmentSize -b "input_files" --samplesLabel "character" --table "path"  -o
 
 <h2>MACS2 - CallPeaks</h2>
 
-macs2 callpeak -t "input_files" -f "character  -n "character" --outdir "path"
+macs2 callpeak -t "input_files" -f "character" -g "character"  -n "character" --outdir "path"
 
   -f : Format of the input files<br>
   -n : Name of the output files<br>
+  -g : Specify the length of the genome
   --outdir : Path to where the output files shoul be writen<br>
 
 https://github.com/macs3-project/MACS
