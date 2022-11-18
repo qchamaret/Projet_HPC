@@ -15,7 +15,6 @@ set -o nounset # force variable initialisation
 
 IFS=$'\n\t'
 
-
 # first job - no dependencies
 # Quality control of the raw data
 jid1=$(sbatch --parsable scripts/atac_qc_init.slurm)
@@ -23,42 +22,42 @@ jid1=$(sbatch --parsable scripts/atac_qc_init.slurm)
 echo "$jid1 : Initial Quality Control"
 
 # Elimination of the adaptaters
-jid2=$(sbatch --parsable --dependency=afterok:$jid1 scripts/atac_trim.slurm)
+jid2=$(sbatch --parsable --dependency=afterok:$jid1 /home/users/student08/Projet_HPC/scripts/atac_trim.slurm)
 
 echo "$jid2 : Trimming with Trimmomatic tool"
 
 # Quality control following the trimming
-jid3=$(sbatch --parsable --dependency=afterok:$jid2 scripts/atac_qc_post.slurm)
+jid3=$(sbatch --parsable --dependency=afterok:$jid2 /home/users/student08/Projet_HPC/scripts/atac_qc_post.slurm)
 
 echo "$jid3 : Quality control after the trimming"
 
 # Mapping
-jid4=$(sbatch --parsable --dependency=afterok:$jid3 scripts/atac_bowtie2.slurm)
+jid4=$(sbatch --parsable --dependency=afterok:$jid3 /home/users/student08/Projet_HPC/scripts/atac_bowtie2.slurm)
 
 echo "$jid4 : Mapping with Bowtie2 tool"
 
 # Elimination of the duplicates
-jid5=$(sbatch --parsable --dependency=afterok:$jid4 scripts/atac_picards.slurm)
+jid5=$(sbatch --parsable --dependency=afterok:$jid4 /home/users/student08/Projet_HPC/scripts/atac_picards.slurm)
 
 echo "$jid5 : Elimination of the duplicates with picard tools"
 
 # Data exploration (correlation)
-jid6=$(sbatch --parsable --dependency=afterok:$jid5 scripts/atac_array.npz.slurm)
+jid6=$(sbatch --parsable --dependency=afterok:$jid5 /home/users/student08/Projet_HPC/scripts/atac_array.npz.slurm)
 
 echo "$jid6 : Correlation analysis with Deeptools"
 
 # Data exploration (read length and coverage)
-jid7=$(sbatch --parsable --dependency=afterok:$jid6 scripts/atac_deeptools.slurm)
+jid7=$(sbatch --parsable --dependency=afterok:$jid6 /home/users/student08/Projet_HPC/scripts/atac_deeptools.slurm)
 
 echo "$jid7 : Read length and coverage analysis with Deeptools"
 
 # Identification of DNA access sites
-jid8=$(sbatch --parsable --dependency=afterok:$jid7 scripts/atac_macs2.slurm)
+jid8=$(sbatch --parsable --dependency=afterok:$jid7 /home/users/student08/Projet_HPC/scripts/atac_macs2.slurm)
 
 echo "$jid8 : Identification of DNA access sites with MACS2 tool"
 
 # Identification of common and unique DNA access sites
-jid9=$(sbatch --parsable --dependency=afterok:$jid8 scripts/atac_bedtools.slurm)
+jid9=$(sbatch --parsable --dependency=afterok:$jid8 /home/users/student08/Projet_HPC/scripts/atac_bedtools.slurm)
 
 echo "$jid9 : Identification of DNA common and unique access sites with bedtools"
 
