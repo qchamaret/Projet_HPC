@@ -17,7 +17,7 @@ IFS=$'\n\t'
 
 # first job - no dependencies
 # Quality control of the raw data
-jid1=$(sbatch --parsable scripts/atac_qc_init.slurm)
+jid1=$(sbatch --parsable /home/users/student08/Projet_HPC/scripts/atac_qc_init.slurm)
 
 echo "$jid1 : Initial Quality Control"
 
