@@ -188,9 +188,8 @@ https://github.com/macs3-project/MACS
 
 <h2>Bedtoools - Intersect</h2>
 
-bedtools intersect -wa (-v) -a "input_file" -b "input_file" > "output_path
+bedtools intersect (-v) -a "input_file" -b "input_file" > "output_path
 
-  -wa : For each overlap, write the original entry of -a<br>
   -v : Returns entries in -a that have no overlap in -b<br>
   
 "BEDTools: a flexible suite of utilities for comparing genomic features" Quinlan AR, Hall IM. 2010 https://doi.org/10.1093/bioinformatics/btq033
