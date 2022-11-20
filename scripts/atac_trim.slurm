@@ -46,7 +46,7 @@ mkdir -p -m 700 "$SCRATCHDIR"
 cd "$SCRATCHDIR"
 
 #Set up data directory
-DATA_DIR=/home/users/shared/data/atacseq/data/subset
+DATA_DIR=/home/users/shared/data/atacseq/data/raw
 CLIPS_DIR=/home/users/shared/data/atacseq/data/
 
 #Run the program
