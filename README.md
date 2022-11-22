@@ -98,6 +98,10 @@ This step can be done by the 'atac_bedtools.slurm' script.
 
 Now that we know which sites are impacted by the Tamoxifen drug, we can visualize better with the IGV tool.
 
+<h2>Run the program</h2>
+
+You can run all the steps of the workflow with the atac_wf.sh script
+
 <h1>Used tools</h1>
 
 <h2>Fastqc</h2>
