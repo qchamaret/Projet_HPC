@@ -2,7 +2,7 @@
 #SBATCH --time=5:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --mem=30G
+#SBATCH --mem=15G
 #SBATCH --cpus-per-task=6   # Nb of threads we want to run on
 #SBATCH -o Projet_HPC/log/slurmjob-%A-%a
 #SBATCH --job-name=deeptools_atac
